@@ -1,1 +1,1 @@
-# comp5212_project
+# Zero Shot Learning with Semantics Information
