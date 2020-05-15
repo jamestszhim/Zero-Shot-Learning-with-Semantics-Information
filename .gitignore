@@ -3,6 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# config
+.DS_Store
+.vscode/
+
+# dataset
+image/datasets/awa/Features
+
 # C extensions
 *.so
 
