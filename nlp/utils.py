@@ -171,6 +171,67 @@ class Record(object):
             self.NOVAL_ACC_3[model_name].append(get_acc(self.NOVAL_True_Labels[model_name][i], self.NOVAL_Predicted_Labels[model_name][i], 3))
             self.SUP_ACC_3[model_name].append(get_acc(self.SUP_True_Labels[model_name][i], self.SUP_Predicted_Labels[model_name][i], 3))
             
+class Record_CLS(object):
+    def __init__(self):
+        self.TRAIN_LOSS ={}
+        self.TRAIN_True_Labels={}
+        self.TRAIN_Predicted_Labels={}
+
+
+        self.EVAL_LOSS={}
+        self.EVAL_True_Labels={}
+        self.EVAL_Predicted_Labels={}
+
+        self.TRAIN_ACC_1 = {}
+        self.EVAL_ACC_1 = {}
+        
+        self.TRAIN_ACC_2 = {}
+        self.EVAL_ACC_2 = {}
+        
+        self.TRAIN_ACC_3 = {}
+        self.EVAL_ACC_3 = {}
+                
+    def config_new_trial(self, model_name):
+        self.TRAIN_LOSS[model_name] = [] 
+        self.TRAIN_True_Labels[model_name] = [] 
+        self.TRAIN_Predicted_Labels[model_name] = [] 
+        
+        self.EVAL_LOSS[model_name] = [] 
+        self.EVAL_True_Labels[model_name] = [] 
+        self.EVAL_Predicted_Labels[model_name] = [] 
+
+        self.TRAIN_ACC_1[model_name] = [] 
+        self.EVAL_ACC_1[model_name] = [] 
+   
+        self.TRAIN_ACC_2[model_name] = [] 
+        self.EVAL_ACC_2[model_name] = [] 
+        
+        self.TRAIN_ACC_3[model_name] = [] 
+        self.EVAL_ACC_3[model_name] = [] 
+        
+        
+        
+    def get_cls_acc(self, true, predict, k):
+        correct = 0.0
+        total = 0.0
+        for i in range(len(true)):
+            if true[i] in predict[i, :k]:
+                correct+=1
+            total+=1
+        return correct/total
+        
+    def gen_acc(self, model_name):
+        num_epoch = len(self.TRAIN_LOSS[model_name])
+        for i in tqdm(range(num_epoch)):
+            self.TRAIN_ACC_1[model_name].append(self.get_cls_acc(self.TRAIN_True_Labels[model_name][i], self.TRAIN_Predicted_Labels[model_name][i], 1))
+            self.EVAL_ACC_1[model_name].append(self.get_cls_acc(self.EVAL_True_Labels[model_name][i], self.EVAL_Predicted_Labels[model_name][i], 1))
+            
+            self.TRAIN_ACC_2[model_name].append(self.get_cls_acc(self.TRAIN_True_Labels[model_name][i], self.TRAIN_Predicted_Labels[model_name][i], 2))
+            self.EVAL_ACC_2[model_name].append(self.get_cls_acc(self.EVAL_True_Labels[model_name][i], self.EVAL_Predicted_Labels[model_name][i], 2))
+            
+            self.TRAIN_ACC_3[model_name].append(self.get_cls_acc(self.TRAIN_True_Labels[model_name][i], self.TRAIN_Predicted_Labels[model_name][i], 3))
+            self.EVAL_ACC_3[model_name].append(self.get_cls_acc(self.EVAL_True_Labels[model_name][i], self.EVAL_Predicted_Labels[model_name][i], 3))
+            
             
 
 class Trainer(nn.Module):
@@ -303,3 +364,85 @@ class Trainer(nn.Module):
             record.SUP_True_Labels[model_name].append(true_laebls)
             record.SUP_Predicted_Labels[model_name].append(predicted_laebls)
         record.gen_acc(model_name)
+        
+        
+        
+def train_cls(model, iterator, optimizer, criterion, device):
+    
+    model.train()
+    epoch_loss = 0.0
+    cumulated_num = 0
+    true_labels = []
+    predicted_labels = []
+    
+    for i, batch in enumerate(iterator):
+        optimizer.zero_grad()
+        
+        src, src_len = batch.sentence
+        label = batch.label
+        src, src_len, label = src.to(device), src_len, label.to(device)
+ 
+        output = model.forward(src, src_len)
+        loss = criterion(output, label)
+        loss.backward()       
+
+        predicted_labels.append(torch.topk(output.detach(), k=3,dim=-1)[1].cpu().numpy())
+        true_labels.append(label.cpu().numpy())
+            
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        optimizer.step()
+        
+        epoch_loss += loss.item()
+        cumulated_num += len(label)
+        print('\r' + str(epoch_loss/cumulated_num), end='')
+    
+    return epoch_loss/cumulated_num, np.concatenate(true_labels), np.concatenate(predicted_labels, axis=0)
+
+
+def evaluate_cls(model, iterator, criterion, device):
+    
+    model.eval()
+    epoch_loss = 0.0
+    cumulated_num = 0
+    true_labels = []
+    predicted_labels = []
+    with torch.no_grad():
+        for i, batch in enumerate(iterator):
+            
+            src, src_len = batch.sentence
+            label = batch.label
+
+            src, src_len, label = src.to(device), src_len, label.to(device)
+            
+            output = model.forward(src, src_len)
+            loss = criterion(output, label)
+            
+            predicted_labels.append(torch.topk(output.detach(), k=3,dim=-1)[1].cpu().numpy())
+            true_labels.append(label.cpu().numpy())
+
+            epoch_loss += loss.item()
+            cumulated_num += len(label)
+            
+            print('\r' + str(epoch_loss/cumulated_num), end='')
+    
+    return epoch_loss/cumulated_num, np.concatenate(true_labels), np.concatenate(predicted_labels, axis=0)
+
+
+
+def run_cls(train_iter, test_iter, model, op, EPOCH,  criterion, name, record, device):
+
+
+    record.config_new_trial(name)
+    for i in tqdm(range(EPOCH), desc='1sr loop'):
+
+        loss, true_laebls, predicted_laebls = train_cls(model, train_iter, op, criterion, device)
+        record.TRAIN_LOSS[name].append(loss)
+        record.TRAIN_True_Labels[name].append(true_laebls)
+        record.TRAIN_Predicted_Labels[name].append(predicted_laebls)
+
+        loss, true_laebls, predicted_laebls =  evaluate_cls(model, test_iter, criterion, device)
+        record.EVAL_LOSS[name].append(loss)
+        record.EVAL_True_Labels[name].append(true_laebls)
+        record.EVAL_Predicted_Labels[name].append(predicted_laebls)
+        
+    record.gen_acc(name)

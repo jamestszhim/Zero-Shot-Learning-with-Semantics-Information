@@ -23,13 +23,13 @@ class MLP(nn.Module):
     
     
 class LSTM_CLS(nn.Module):
-    def __init__(self, vocab_size, emb_dim, hid_dim, dropout, padding_idx, num_layer):
+    def __init__(self, vocab_size, emb_dim, hid_dim, dropout, padding_idx, num_layer, n_class):
         super().__init__()
         
         self.hid_dim = hid_dim
         self.embedding = nn.Embedding(vocab_size, emb_dim, padding_idx=padding_idx)
         self.dropout = nn.Dropout(dropout)
-        self.out = nn.Linear(hid_dim*2*num_layer, 9)
+        self.out = nn.Linear(hid_dim*2*num_layer, n_class)
         self.rnn = nn.GRU(input_size=emb_dim, hidden_size=self.hid_dim, num_layers=num_layer, dropout=dropout, bidirectional=True, batch_first=True)  
 
 

@@ -12,13 +12,13 @@ nltk.download('punkt')
 from nltk import word_tokenize
 
 
-def load_cls_dataset():
+def load_cls_dataset(train_file, test_file):
     txt_field = data.Field(tokenize=word_tokenize, lower=True, include_lengths=True, batch_first=True)
     label_field = data.Field(sequential=False, unk_token=None)
     source_field = data.Field(sequential=False, unk_token=None)
 
     # make splits for data
-    train, test= TabularDataset.splits(path='./Dataset/emotion', train='train_full.csv', test='test_full.csv',format='csv', 
+    train, test= TabularDataset.splits(path='./Dataset/emotion', train=train_file + '.csv', test=test_file + '.csv',format='csv', 
                                       fields=[('label', label_field),('source', source_field), ('sentence', txt_field)], skip_header=True)
         
     # build the vocabulary on the training set only
