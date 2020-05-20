@@ -10,4 +10,5 @@ TBC
 Datasets
 AWA2:       https://cvml.ist.ac.at/AwA2/
 Food11:     https://www.kaggle.com/vermaavi/food11
-Emotion:    TBC
+Emotion:    https://github.com/yinwenpeng/BenchmarkingZeroShot    (raw dataset)
+            nlp/Dataset/emotion                                   (splited dataset for this project)
