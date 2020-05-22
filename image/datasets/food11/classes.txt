@@ -1,0 +1,11 @@
+1	bread
+2	dairy
+3	dessert
+4	egg
+5	fried
+6	meat
+7	noodles-pasta
+8	rice
+9	seafood
+10	soup
+11	vegetable-fruit
