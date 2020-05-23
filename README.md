@@ -38,8 +38,8 @@ For text-DeVise, Sentence-BERT [4] was used to extract sentence's features. The 
 <code>./nlp/Dataset_Preprocessing.ipynb</code>
 The jupyter notebook is a self-explainary, step-by-step data preprocessing guide. By running it sequentially, it cleaned and splited the raw emotion dataset, create label vectors by GloVe [3] and transform sentence from text to sentence vector by Sentence-BERT [4]
 
-#### LSTM Classifier
-<code>./nlp/LSTM_CLS.ipynb</code>
+#### GRU Classifier
+<code>./nlp/GRU_CLS.ipynb</code>
 The jupyter notebook is a self-explainary, step-by-step experiment of LSTM Classifier. By running it sequentially, it would train a supevised LSTM Classifier on full classes, seen classes, and unseen classes respectively. And then it would claculated the top1, top2, top3 accuracies and f1 scores of the three models with comfusion matrix plotted.
 
 #### Text DeVise
