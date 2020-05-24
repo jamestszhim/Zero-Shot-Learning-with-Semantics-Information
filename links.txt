@@ -14,5 +14,5 @@ Food11 (raw):       https://www.kaggle.com/vermaavi/food11
 Food11 (processed): https://drive.google.com/drive/folders/1r9K19KSajAIE95m7yaIiTquKvaeMVo0V?usp=sharing
 
 Emotion (raw):            https://github.com/yinwenpeng/BenchmarkingZeroShot
-Emotion (proposed split): ./nlp/Dataset/emotion
+Emotion (proposed split): nlp/Dataset/emotion under github directory https://github.com/jamestszhim/Zero-Shot-Learning-with-Semantics-Information.git
 
