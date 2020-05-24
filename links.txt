@@ -16,3 +16,6 @@ Food11 (processed): https://drive.google.com/drive/folders/1r9K19KSajAIE95m7yaIi
 Emotion (raw):            https://github.com/yinwenpeng/BenchmarkingZeroShot
 Emotion (proposed split): nlp/Dataset/emotion under github directory https://github.com/jamestszhim/Zero-Shot-Learning-with-Semantics-Information.git
 
+Github link
+https://github.com/jamestszhim/Zero-Shot-Learning-with-Semantics-Information.git
+
