@@ -5,12 +5,14 @@
 ######################################################### 
 
 Youtube link
-TBC
+https://www.youtube.com/watch?v=-HgACGfbL7U&feature=youtu.be
 
 Datasets
 AWA2:       https://cvml.ist.ac.at/AwA2/
-Food11:     https://www.kaggle.com/vermaavi/food11                
-Processed data for SAE and RKT:
-            https://drive.google.com/drive/folders/1r9K19KSajAIE95m7yaIiTquKvaeMVo0V?usp=sharing
-Emotion:    https://github.com/yinwenpeng/BenchmarkingZeroShot    (raw dataset)
-            nlp/Dataset/emotion                                   (splited dataset for this project)
+
+Food11 (raw):       https://www.kaggle.com/vermaavi/food11                
+Food11 (processed): https://drive.google.com/drive/folders/1r9K19KSajAIE95m7yaIiTquKvaeMVo0V?usp=sharing
+
+Emotion (raw):            https://github.com/yinwenpeng/BenchmarkingZeroShot
+Emotion (proposed split): ./nlp/Dataset/emotion
+
